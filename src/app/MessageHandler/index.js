@@ -18,12 +18,12 @@ const MessageHandler = async (msg, mongodb) => {
     let input = msg.content.slice(prefix.length).trim().split(" ");
     let command = input.shift();
     if (command == "admin" && msg.author.id == msg.guild.ownerID) {
-      AdminCommandsHandler(input, msg.guild, mongodb).then((res) => {
+      AdminCommandsHandler(input, msg, mongodb).then((res) => {
         if (res) msg.react(responseReaction.success);
         else msg.react(responseReaction.fail);
       });
     } else if (command == "channel") {
-      ChannelCommandHandler(input, msg.guild, mongodb).then((res) => {
+      ChannelCommandHandler(input, msg, mongodb).then((res) => {
         if (res) msg.react(responseReaction.success);
         else msg.react(responseReaction.fail);
       });

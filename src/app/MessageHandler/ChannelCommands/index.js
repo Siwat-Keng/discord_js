@@ -1,9 +1,14 @@
 import ClearChannel from "../../ReadyHandler";
+import noPermissionMessage from "../../../locales/noPermission.json";
 
-const ChannelCommandHandler = async (input, guild, mongodb) => {
+const ChannelCommandHandler = async (input, msg, mongodb) => {
   try {
+    if (!msg.guild.me.hasPermission("MANAGE_CHANNELS")) {
+      msg.reply(noPermissionMessage.noManageChannelPermission);
+      return false;
+    }
     let channelName = input[0];
-    guild.channels
+    msg.guild.channels
       .create(channelName, { type: "voice" })
       .then(async (channel) => {
         await mongodb
