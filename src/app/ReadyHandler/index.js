@@ -3,14 +3,14 @@ const ClearChannel = async (channel, mongodb) => {
   channel.delete();
   await mongodb
     .db(process.env.MONGODB_DB)
-    .collection("temporaryChannel")
+    .collection(process.env.DB_TEMPORARY_CHANNEL)
     .deleteOne({ id: channel.id });
 };
 
 const ReadyHandler = async (client, mongodb) => {
   mongodb
     .db(process.env.MONGODB_DB)
-    .collection("temporaryChannel")
+    .collection(process.env.DB_TEMPORARY_CHANNEL)
     .find({})
     .toArray()
     .then((res) => {

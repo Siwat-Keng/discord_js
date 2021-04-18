@@ -4,7 +4,7 @@ const AdminCommandsHandler = async (input, guild, mongodb) => {
     if (command == "setprefix") {
       await mongodb
         .db(process.env.MONGODB_DB)
-        .collection("prefix")
+        .collection(process.env.DB_PREFIX)
         .updateOne(
           { guild_id: guild.id },
           { $set: { prefix: input[1], guild_id: guild.id } }

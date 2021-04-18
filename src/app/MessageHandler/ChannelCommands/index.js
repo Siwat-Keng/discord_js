@@ -13,7 +13,7 @@ const ChannelCommandHandler = async (input, msg, mongodb) => {
       .then(async (channel) => {
         await mongodb
           .db(process.env.MONGODB_DB)
-          .collection("temporaryChannel")
+          .collection(process.env.DB_TEMPORARY_CHANNEL)
           .insertOne({ id: channel.id });
         setTimeout(ClearChannel.ClearChannel, 30000, channel, mongodb);
       });
