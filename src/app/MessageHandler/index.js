@@ -13,8 +13,7 @@ const MessageHandler = async (msg, mongodb) => {
     .db(process.env.MONGODB_DB)
     .collection("prefix")
     .findOne({ guild_id: msg.guild.id });
-  if (!prefix) prefix = process.env.DEFAULT_PREFIX;
-  else prefix = prefix.prefix;
+  prefix = prefix.prefix;
   if (msg.content.startsWith(prefix)) {
     let input = msg.content.slice(prefix.length).trim().split(" ");
     let command = input.shift();
