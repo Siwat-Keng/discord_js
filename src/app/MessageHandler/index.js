@@ -1,8 +1,7 @@
 import AdminCommandsHandler from "./AdminCommands";
 import ChannelCommandHandler from "./ChannelCommands";
 import HelpCommandsHandler from "./HelpCommands";
-import { IntroduceChecker } from "../../services";
-
+import CovidCommandHandler from './CovidCommands';
 import responseReaction from "../../locales/responseReaction.json";
 
 const MessageHandler = async (msg, mongodb) => {
@@ -32,6 +31,11 @@ const MessageHandler = async (msg, mongodb) => {
         if (res) msg.react(responseReaction.success);
         else msg.react(responseReaction.fail);
       });
+    } else if (command == "covid") {
+      CovidCommandHandler(input, msg.channel).then((res) => {
+        if (res) msg.react(responseReaction.success);
+        else msg.react(responseReaction.fail);
+      })
     }
   } else {
     // IntroduceChecker(msg, mongodb).then((res) => {
