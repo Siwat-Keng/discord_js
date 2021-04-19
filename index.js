@@ -24,7 +24,7 @@ const main = async () => {
 
   client.on("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    Handler.ReadyHandler(client, mongodb)
+    Handler.ReadyHandler(client, mongodb);
   });
 
   client.on("message", (msg) => {

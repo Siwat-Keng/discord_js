@@ -1,3 +1,5 @@
 {
-  "noManageChannelPermission": "ไม่มี Permission แก้ไข Channel ง่ะ"
+  "noManageChannelPermission": "ไม่มี Permission แก้ไข Channel ง่ะ",
+  "noVoiceChannel": "มองไม่เห็นห้องง่ะ อยู่ห้องไหนอ่อ?",
+  "noVoiceChannelPermission": "ไม่มี Permission(View Channel, Connect, Speak) สำหรับร้องเพลงง่ะ"
 }
