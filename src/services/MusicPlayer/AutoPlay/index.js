@@ -23,9 +23,6 @@ const AutoPlay = async (message, voiceChannel, mongodb) => {
   if (currentQueue !== null) {
     currentQueue = currentQueue.serverQueue
     currentQueue.autoPlay = true;
-    autoPlaySongList.map((music) => {
-      if(currentQueue.songs.indexOf(music) == -1) currentQueue.songs.push(music)
-    })
     await mongodb
       .db(process.env.MONGODB_DB)
       .collection(process.env.DB_MUSIC_QUEUE)

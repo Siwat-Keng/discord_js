@@ -62,7 +62,6 @@ const play = async (guild, song, mongodb) => {
   );
 
   if (!song && !serverQueue.autoPlay) {
-    guild.me.voice.connection.disconnect();
     await mongodb
       .db(process.env.MONGODB_DB)
       .collection(process.env.DB_MUSIC_QUEUE)
@@ -118,10 +117,11 @@ const play = async (guild, song, mongodb) => {
       { max: 1, time: 600000 }
     )
     .then((collected) => {
-      if (collected.first().emoji.name == musicData.reaction.like)
-        saveAutoPlay(song, textChannel.guild.id, mongodb);
-      else if (collected.first().emoji.name == musicData.reaction.dislike)
-        removeAutoPlay(song, textChannel.guild.id, mongodb);
+      if (collected.first())
+        if (collected.first().emoji.name == musicData.reaction.like)
+          saveAutoPlay(song, textChannel.guild.id, mongodb);
+        else if (collected.first().emoji.name == musicData.reaction.dislike)
+          removeAutoPlay(song, textChannel.guild.id, mongodb);
     });
 };
 
