@@ -1,7 +1,6 @@
 import { hasAutoPlayList, AutoPlay } from "./AutoPlay";
 import { SearchPlay } from "./SearchPlay";
-import Skip from "./Skip";
-import Stop from "./Stop";
+import { Skip, Stop, Sound } from "./MiniCommands";
 import musicData from "../../locales/musicData.json";
 
 const MusicPlayer = (input, message, voiceChannel, mongodb) => {
@@ -19,6 +18,7 @@ const MusicPlayer = (input, message, voiceChannel, mongodb) => {
       }
     else if (command == "skip") Skip(message.guild);
     else if (command == "stop") Stop(message.guild, mongodb);
+    else if (command == "sound") Sound(args[0], message.guild, mongodb);
     else message.reply(musicData.message.musicHelp);
   } else message.reply(musicData.message.musicHelp);
 };

@@ -18,7 +18,7 @@ const saveAutoPlay = (music, guildID, mongodb) => {
             .updateOne(
               { guild_id: guildID },
               {
-                $set: { guild_id: guildID, songList: currentSongList.songList },
+                $set: { songList: currentSongList.songList },
               }
             );
         }
@@ -50,7 +50,7 @@ const removeAutoPlay = (music, guildID, mongodb) => {
         .collection(process.env.DB_MUSIC_AUTOPLAY)
         .updateOne(
           { guild_id: guildID },
-          { $set: { guild_id: guildID, songList: currentSongList } }
+          { $set: { songList: currentSongList } }
         );
     });
 };
@@ -72,7 +72,6 @@ const playing = (serverQueue, guild, mongodb) => {
               { guild_id: guild.id },
               {
                 $set: {
-                  guild_id: guild.id,
                   serverQueue: newServerQueue.serverQueue,
                 },
               }
@@ -82,7 +81,18 @@ const playing = (serverQueue, guild, mongodb) => {
             });
         });
     });
-  dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+
+  mongodb
+    .db(process.env.MONGODB_DB)
+    .collection(process.env.DB_CONFIG)
+    .findOne({ guild_id: guild.id })
+    .then((data) => {
+      if (data.volume)
+        dispatcher.setVolumeLogarithmic(Number(data.volume) / 50);
+      else
+        dispatcher.setVolumeLogarithmic(Number(process.env.DEFAULT_SOUND) / 50);
+    });
+
   guild.me.client.channels
     .fetch(serverQueue.textChannelID)
     .then((textChannel) => {
@@ -148,7 +158,6 @@ const play = (guild, song, mongodb) => {
                 { guild_id: guild.id },
                 {
                   $set: {
-                    guild_id: guild.id,
                     serverQueue: serverQueue.serverQueue,
                   },
                 }
@@ -167,7 +176,6 @@ const preparePlay = (song, serverQueue, textChannel, voiceChannel, mongodb) => {
       textChannelID: textChannel.id,
       voiceChannelID: voiceChannel.id,
       songs: [],
-      volume: 5,
       playing: true,
       autoPlay: false,
     };
@@ -203,7 +211,6 @@ const preparePlay = (song, serverQueue, textChannel, voiceChannel, mongodb) => {
         { guild_id: textChannel.guild.id },
         {
           $set: {
-            guild_id: textChannel.guild.id,
             serverQueue: serverQueue.serverQueue,
           },
         }

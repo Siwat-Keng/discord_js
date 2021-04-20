@@ -12,7 +12,7 @@ const MessageHandler = async (msg, mongodb) => {
   }
   var prefix = await mongodb
     .db(process.env.MONGODB_DB)
-    .collection(process.env.DB_PREFIX)
+    .collection(process.env.DB_CONFIG)
     .findOne({ guild_id: msg.guild.id });
   prefix = prefix.prefix;
   if (msg.content.startsWith(prefix)) {

@@ -1,14 +1,14 @@
-const GuildHandler = async (guild, mongodb) => {
+const GuildHandler = (guild, mongodb) => {
   mongodb
     .db(process.env.MONGODB_DB)
-    .collection(process.env.DB_PREFIX)
+    .collection(process.env.DB_CONFIG)
     .findOne({ guild_id: guild.id })
     .then((res) => {
       if (res) return;
       else
         mongodb
           .db(process.env.MONGODB_DB)
-          .collection(process.env.DB_PREFIX)
+          .collection(process.env.DB_CONFIG)
           .insertOne({
             prefix: process.env.DEFAULT_PREFIX,
             guild_id: guild.id,
