@@ -2,29 +2,55 @@ import axios from "axios";
 
 const BASE_URL = "https://s.isanook.com/an/0/covid-19/static/data/";
 
-const getDailyURL = async () => {
-  return (await axios.get(BASE_URL + "thailand/daily/latest.json")).data.url;
+const getDailyURL = () => {
+  let timestamp = new Date().getTime();
+  return axios
+    .get(`${BASE_URL}thailand/daily/latest.json?${timestamp}`)
+    .then((res) => {
+      return res.data.url;
+    });
 };
 
-const getGlobalURL = async () => {
-  return (await axios.get(BASE_URL + "global/confirmed/latest.json")).data.url;
+const getGlobalURL = () => {
+  let timestamp = new Date().getTime();
+  return axios
+    .get(`${BASE_URL}global/confirmed/latest.json?${timestamp}`)
+    .then((res) => {
+      return res.data.url;
+    });
 };
 
-const getAccumulateURL = async () => {
-  return (await axios.get(BASE_URL + "thailand/accumulate/latest.json")).data
-    .url;
+const getAccumulateURL = () => {
+  let timestamp = new Date().getTime();
+  return axios
+    .get(`${BASE_URL}thailand/accumulate/latest.json?${timestamp}`)
+    .then((res) => {
+      return res.data.url;
+    });
 };
 
-const getDailyData = async () => {
-  return (await axios.get(await getDailyURL())).data.data;
+const getDailyData = () => {
+  return getDailyURL().then((url) => {
+    return axios.get(url).then((res) => {
+      return res.data.data;
+    });
+  });
 };
 
-const getGlobalData = async () => {
-  return (await axios.get(await getGlobalURL())).data.data;
+const getGlobalData = () => {
+  return getGlobalURL().then((url) => {
+    return axios.get(url).then((res) => {
+      return res.data.data;
+    });
+  });
 };
 
-const getAccumulateData = async () => {
-  return (await axios.get(await getAccumulateURL())).data.data;
+const getAccumulateData = () => {
+  return getAccumulateURL().then((url) => {
+    return axios.get(url).then((res) => {
+      return res.data.data;
+    });
+  });
 };
 
 module.exports = { getDailyData, getGlobalData, getAccumulateData };
