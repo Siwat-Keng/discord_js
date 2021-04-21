@@ -3,7 +3,7 @@ import axios from "axios";
 const BASE_URL = "https://s.isanook.com/an/0/covid-19/static/data/";
 
 const getDailyURL = () => {
-  let timestamp = new Date().getTime();
+  const timestamp = new Date().getTime() + Number(process.env.TIME_DIFF);
   return axios
     .get(`${BASE_URL}thailand/daily/latest.json?${timestamp}`)
     .then((res) => {
@@ -12,7 +12,7 @@ const getDailyURL = () => {
 };
 
 const getGlobalURL = () => {
-  let timestamp = new Date().getTime();
+  const timestamp = new Date().getTime() + Number(process.env.TIME_DIFF);
   return axios
     .get(`${BASE_URL}global/confirmed/latest.json?${timestamp}`)
     .then((res) => {
@@ -21,7 +21,7 @@ const getGlobalURL = () => {
 };
 
 const getAccumulateURL = () => {
-  let timestamp = new Date().getTime();
+  const timestamp = new Date().getTime() + Number(process.env.TIME_DIFF);
   return axios
     .get(`${BASE_URL}thailand/accumulate/latest.json?${timestamp}`)
     .then((res) => {
