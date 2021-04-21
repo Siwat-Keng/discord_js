@@ -1,11 +1,34 @@
-const Skip = (guild) => {
-  if (guild.me.voice.connection !== null)
+import { play } from "../SearchPlay";
+
+const Skip = (guild, mongodb) => {
+  if (guild.me.voice.connection && !guild.me.voice.connection.dispatcher.paused)
     guild.me.voice.connection.dispatcher.end();
+  else if (guild.me.voice.connection) {
+    guild.me.voice.connection.dispatcher.resume();
+    guild.me.voice.connection.dispatcher.end();
+    guild.me.voice.connection.dispatcher.pause();
+  }
+
+  mongodb
+    .db(process.env.MONGODB_DB)
+    .collection(process.env.DB_MUSIC_QUEUE)
+    .findOne({ guild_id: guild.id })
+    .then((response) => {
+      if (!response.serverQueue.playing) {
+        response.serverQueue.songs.shift();
+        mongodb
+          .db(process.env.MONGODB_DB)
+          .collection(process.env.DB_MUSIC_QUEUE)
+          .updateOne(
+            { guild_id: guild.id },
+            { $set: { serverQueue: response.serverQueue } }
+          );
+      }
+    });
 };
 
 const Stop = (guild, mongodb) => {
-  if (guild.me.voice.connection !== null)
-    guild.me.voice.connection.disconnect();
+  if (guild.me.voice.connection) guild.me.voice.connection.disconnect();
   mongodb
     .db(process.env.MONGODB_DB)
     .collection(process.env.DB_MUSIC_QUEUE)
@@ -25,4 +48,66 @@ const Sound = (volume, guild, mongodb) => {
   }
 };
 
-module.exports = { Skip, Stop, Sound };
+const Pause = (guild, mongodb) => {
+  if (guild.me.voice.connection.dispatcher)
+    guild.me.voice.connection.dispatcher.pause();
+  mongodb
+    .db(process.env.MONGODB_DB)
+    .collection(process.env.DB_MUSIC_QUEUE)
+    .findOne({ guild_id: guild.id })
+    .then((response) => {
+      if (response) {
+        response.serverQueue.playing = false;
+        mongodb
+          .db(process.env.MONGODB_DB)
+          .collection(process.env.DB_MUSIC_QUEUE)
+          .updateOne(
+            { guild_id: guild.id },
+            {
+              $set: {
+                serverQueue: response.serverQueue,
+              },
+            }
+          );
+      }
+    });
+};
+
+const Resume = (voiceChannel, mongodb) => {
+  mongodb
+    .db(process.env.MONGODB_DB)
+    .collection(process.env.DB_MUSIC_QUEUE)
+    .findOne({ guild_id: voiceChannel.guild.id })
+    .then((response) => {
+      if (response) {
+        response.serverQueue.playing = true;
+        mongodb
+          .db(process.env.MONGODB_DB)
+          .collection(process.env.DB_MUSIC_QUEUE)
+          .updateOne(
+            { guild_id: voiceChannel.guild.id },
+            {
+              $set: {
+                serverQueue: response.serverQueue,
+              },
+            }
+          )
+          .then(() => {
+            if (
+              !voiceChannel.guild.me.voice.connection ||
+              !voiceChannel.guild.me.voice.connection.dispatcher
+            )
+              voiceChannel.join().then(() => {
+                play(
+                  voiceChannel.guild,
+                  response.serverQueue.songs[0],
+                  mongodb
+                );
+              });
+            else voiceChannel.guild.me.voice.connection.dispatcher.resume();
+          });
+      }
+    });
+};
+
+module.exports = { Skip, Stop, Sound, Pause, Resume };

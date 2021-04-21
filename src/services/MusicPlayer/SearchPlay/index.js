@@ -56,6 +56,7 @@ const removeAutoPlay = (music, guildID, mongodb) => {
 };
 
 const playing = (serverQueue, guild, mongodb) => {
+  if (!serverQueue.playing) return;
   const dispatcher = guild.me.voice.connection
     .play(ytdl(serverQueue.songs[0].url))
     .on("finish", () => {

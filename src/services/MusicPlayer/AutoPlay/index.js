@@ -11,6 +11,19 @@ const hasAutoPlayList = (guild, mongodb) => {
     });
 };
 
+const shuffle = (musicList) => {
+  var currentIndex = musicList.length,
+    temporaryValue,
+    randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = musicList[currentIndex];
+    musicList[currentIndex] = musicList[randomIndex];
+    musicList[randomIndex] = temporaryValue;
+  }
+};
+
 const AutoPlay = (message, voiceChannel, mongodb) => {
   Promise.all([
     mongodb
@@ -22,8 +35,8 @@ const AutoPlay = (message, voiceChannel, mongodb) => {
       .collection(process.env.DB_MUSIC_AUTOPLAY)
       .findOne({ guild_id: message.guild.id }),
   ]).then(([currentQueue, autoPlaySongList]) => {
-    if (currentQueue) {
-      currentQueue = currentQueue.serverQueue;
+    shuffle(autoPlaySongList.songList);
+    if (currentQueue && !currentQueue.serverQueue.autoPlay) {
       currentQueue.serverQueue.autoPlay = true;
       mongodb
         .db(process.env.MONGODB_DB)
@@ -32,16 +45,15 @@ const AutoPlay = (message, voiceChannel, mongodb) => {
           { guild_id: message.guild.id },
           {
             $set: {
-              guild_id: message.guild.id,
               serverQueue: currentQueue.serverQueue,
             },
           }
         );
-    } else {
+    } else if (!currentQueue) {
       currentQueue = {
         textChannelID: message.channel.id,
         voiceChannelID: voiceChannel.id,
-        songs: autoPlaySongList,
+        songs: autoPlaySongList.songList,
         volume: 5,
         playing: true,
         autoPlay: true,
@@ -55,7 +67,7 @@ const AutoPlay = (message, voiceChannel, mongodb) => {
         })
         .then(() => {
           voiceChannel.join().then(() => {
-            play(message.guild, autoPlaySongList[0], mongodb);
+            play(message.guild, autoPlaySongList.songList[0], mongodb);
           });
         });
     }
