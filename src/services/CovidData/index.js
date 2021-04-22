@@ -14,24 +14,8 @@ const ramdomNumber = () => {
 const randomColor = (background, border) => {
   let randomList = [ramdomNumber(), ramdomNumber(), ramdomNumber()];
   return [
-    "rgba(" +
-      randomList[0].toString() +
-      ", " +
-      randomList[1].toString() +
-      ", " +
-      randomList[2].toString() +
-      ", " +
-      background.toString() +
-      ")",
-    "rgba(" +
-      randomList[0].toString() +
-      ", " +
-      randomList[1].toString() +
-      ", " +
-      randomList[2].toString() +
-      ", " +
-      border.toString() +
-      ")",
+    `rgba(${randomList[0]}, ${randomList[1]}, ${randomList[2]}, ${background})`,
+    `rgba(${randomList[0]}, ${randomList[1]}, ${randomList[2]}, ${border})`,
   ];
 };
 
@@ -103,19 +87,20 @@ const CovidData = async () => {
     description:
       "```md\n[ อัพเดทข้อมูลล่าสุด " +
       formattedDataDate +
-      " ]\n\n# ผู้ติดเชื้อเพิ่ม : " +
-      (todayData[todayData.length - 1].confirmed -
-        todayData[todayData.length - 2].confirmed) +
-      " คน\n# รักษาหายวันนี้ : " +
-      (todayData[todayData.length - 1].recovered -
-        todayData[todayData.length - 2].recovered) +
-      " คน\n# เสียชีวิตเพิ่ม : " +
-      (todayData[todayData.length - 1].deaths -
-        todayData[todayData.length - 2].deaths) +
-      " คน\n# ผู้ป่วยสะสม : " +
-      (todayData[todayData.length - 1].confirmed -
+      ` ]\n\n# ผู้ติดเชื้อเพิ่ม : ${
+        todayData[todayData.length - 1].confirmed -
+        todayData[todayData.length - 2].confirmed
+      } คน\n# รักษาหายวันนี้ : ${
         todayData[todayData.length - 1].recovered -
-        todayData[todayData.length - 1].deaths) +
+        todayData[todayData.length - 2].recovered
+      } คน\n# เสียชีวิตเพิ่ม : ${
+        todayData[todayData.length - 1].deaths -
+        todayData[todayData.length - 2].deaths
+      } คน\n# ผู้ป่วยสะสม : ${
+        todayData[todayData.length - 1].confirmed -
+        todayData[todayData.length - 1].recovered -
+        todayData[todayData.length - 1].deaths
+      }` +
       " คน```",
     color: 0x00ff00,
     image: {
@@ -123,7 +108,7 @@ const CovidData = async () => {
     },
     url: "https://covid19.th-stat.com/",
     footer: {
-      text: "Today at " + formattedTime + "\nhttps://www.sanook.com/covid-19/",
+      text: `Today at ${formattedTime}\nhttps://www.sanook.com/covid-19/`,
     },
     files: [
       {
@@ -149,21 +134,12 @@ const CovidProvince = async (province) => {
       (item) => item.slug == targetProvince[0].toLowerCase()
     )[0];
   const embedObject = {
-    title: "รายงานสถานการณ์ โควิด-19 จังหวัด " + provinceData.title,
-    description:
-      "**จังหวัด " +
-      provinceData.title +
-      "**\n\n**ผู้ป่วยสะสม**\n" +
-      provinceData.currentStatus.accumulate +
-      " คน ( ติดเชื้อเพิ่ม " +
-      provinceData.currentStatus.new +
-      " คน )\n\n**ระดับการเฝ้าระวัง**\nระดับ " +
-      provinceData.currentStatus.infectionLevelByRule +
-      "\n",
+    title: `รายงานสถานการณ์ โควิด-19 จังหวัด ${provinceData.title}`,
+    description: `**จังหวัด ${provinceData.title}**\n\n**ผู้ป่วยสะสม**\n${provinceData.currentStatus.accumulate} คน ( ติดเชื้อเพิ่ม ${provinceData.currentStatus.new} คน )\n\n**ระดับการเฝ้าระวัง**\nระดับ ${provinceData.currentStatus.infectionLevelByRule}`,
     color: 0x00ff00,
     url: "https://www.sanook.com/covid-19/",
     footer: {
-      text: "Today at " + formattedTime + "\nhttps://www.sanook.com/covid-19/",
+      text: `Today at ${formattedTime}\nhttps://www.sanook.com/covid-19/`,
     },
   };
   return embedObject;

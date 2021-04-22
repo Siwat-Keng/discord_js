@@ -1,9 +1,13 @@
 import { play } from "../SearchPlay";
 
 const Skip = (guild, mongodb) => {
-  if (guild.me.voice.connection && !guild.me.voice.connection.dispatcher.paused)
+  if (
+    guild.me.voice.connection &&
+    guild.me.voice.connection.dispatcher &&
+    !guild.me.voice.connection.dispatcher.paused
+  )
     guild.me.voice.connection.dispatcher.end();
-  else if (guild.me.voice.connection) {
+  else if (guild.me.voice.connection && guild.me.voice.connection.dispatcher) {
     guild.me.voice.connection.dispatcher.resume();
     guild.me.voice.connection.dispatcher.end();
     guild.me.voice.connection.dispatcher.pause();
@@ -14,7 +18,7 @@ const Skip = (guild, mongodb) => {
     .collection(process.env.DB_MUSIC_QUEUE)
     .findOne({ guild_id: guild.id })
     .then((response) => {
-      if (!response.serverQueue.playing) {
+      if (response.serverQueue && !response.serverQueue.playing) {
         response.serverQueue.songs.shift();
         mongodb
           .db(process.env.MONGODB_DB)

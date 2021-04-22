@@ -40,11 +40,11 @@ const removeAutoPlay = (music, guildID, mongodb) => {
     .collection(process.env.DB_MUSIC_AUTOPLAY)
     .findOne({ guild_id: guildID })
     .then((currentSongList) => {
-      if (currentSongList !== null) currentSongList = currentSongList.songList;
+      if (currentSongList)
+        currentSongList = currentSongList.songList.filter((item) => {
+          item != music;
+        });
       else currentSongList = [];
-      currentSongList = currentSongList.filter((item) => {
-        return item !== music;
-      });
       mongodb
         .db(process.env.MONGODB_DB)
         .collection(process.env.DB_MUSIC_AUTOPLAY)
@@ -56,7 +56,7 @@ const removeAutoPlay = (music, guildID, mongodb) => {
 };
 
 const playing = (serverQueue, guild, mongodb) => {
-  if (!serverQueue.playing) return;
+  if (!serverQueue.playing || serverQueue.songs[0]) return;
   const dispatcher = guild.me.voice.connection
     .play(ytdl(serverQueue.songs[0].url))
     .on("finish", () => {
@@ -152,25 +152,32 @@ const play = (guild, song, mongodb) => {
           .collection(process.env.DB_MUSIC_AUTOPLAY)
           .findOne({ guild_id: guild.id })
           .then((autoPlaySongList) => {
-            serverQueue.serverQueue.songs = [
-              autoPlaySongList.songList[
-                Math.floor(Math.random() * autoPlaySongList.songList.length)
-              ],
-            ];
-            mongodb
-              .db(process.env.MONGODB_DB)
-              .collection(process.env.DB_MUSIC_QUEUE)
-              .updateOne(
-                { guild_id: guild.id },
-                {
-                  $set: {
-                    serverQueue: serverQueue.serverQueue,
-                  },
-                }
-              )
-              .then(() => {
-                playing(serverQueue.serverQueue, guild, mongodb);
-              });
+            if (!autoPlaySongList || !autoPlaySongList.songList.length)
+              mongodb
+                .db(process.env.MONGODB_DB)
+                .collection(process.env.DB_MUSIC_QUEUE)
+                .deleteMany({ guild_id: guild.id });
+            else {
+              serverQueue.serverQueue.songs = [
+                autoPlaySongList.songList[
+                  Math.floor(Math.random() * autoPlaySongList.songList.length)
+                ],
+              ];
+              mongodb
+                .db(process.env.MONGODB_DB)
+                .collection(process.env.DB_MUSIC_QUEUE)
+                .updateOne(
+                  { guild_id: guild.id },
+                  {
+                    $set: {
+                      serverQueue: serverQueue.serverQueue,
+                    },
+                  }
+                )
+                .then(() => {
+                  playing(serverQueue.serverQueue, guild, mongodb);
+                });
+            }
           });
       } else playing(serverQueue.serverQueue, guild, mongodb);
     });
