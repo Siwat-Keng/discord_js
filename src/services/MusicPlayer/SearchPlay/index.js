@@ -98,7 +98,9 @@ const playing = (serverQueue, guild, mongodb) => {
     .fetch(serverQueue.textChannelID)
     .then((textChannel) => {
       textChannel
-        .send(`Start playing: **${serverQueue.songs[0].title}**`)
+        .send(`Start playing: **${serverQueue.songs[0].title}**`, {
+          embed: serverQueue.songs[0],
+        })
         .then((message) => {
           message.react(musicData.reaction.like).then((r) => {
             message.react(musicData.reaction.dislike);
@@ -150,8 +152,11 @@ const play = (guild, song, mongodb) => {
           .collection(process.env.DB_MUSIC_AUTOPLAY)
           .findOne({ guild_id: guild.id })
           .then((autoPlaySongList) => {
-            song = autoPlaySongList.songList[0];
-            serverQueue.serverQueue.songs = autoPlaySongList.songList;
+            serverQueue.serverQueue.songs = [
+              autoPlaySongList.songList[
+                Math.floor(Math.random() * autoPlaySongList.songList.length)
+              ],
+            ];
             mongodb
               .db(process.env.MONGODB_DB)
               .collection(process.env.DB_MUSIC_QUEUE)
@@ -182,7 +187,6 @@ const preparePlay = (song, serverQueue, textChannel, voiceChannel, mongodb) => {
     };
 
     queueContruct.songs.push(song);
-
     mongodb
       .db(process.env.MONGODB_DB)
       .collection(process.env.DB_MUSIC_QUEUE)
@@ -217,7 +221,7 @@ const preparePlay = (song, serverQueue, textChannel, voiceChannel, mongodb) => {
         }
       )
       .then(() => {
-        textChannel.send(`Added **${song.title}** to queue.`);
+        textChannel.send(`Added **${song.title}** to queue.`, { embed: song });
       });
   }
 };
@@ -234,6 +238,10 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
           song = {
             title: res.videoDetails.title,
             url: res.videoDetails.video_url,
+            description: `By **${res.videoDetails.author.name}**`,
+            footer: {
+              text: `Views : ${res.videoDetails.viewCount}`,
+            },
           };
           preparePlay(song, serverQueue, textChannel, voiceChannel, mongodb);
         });
@@ -262,25 +270,66 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
                 { max: 1, time: 60000 }
               )
               .then((collected) => {
+                msg.delete();
                 if (collected.first()) {
                   if (collected.first().emoji.name == musicData.reaction.one)
-                    song = { title: videoList[0].title, url: videoList[0].url };
+                    song = {
+                      title: videoList[0].title,
+                      url: videoList[0].url,
+                      description: `By **${videoList[0].author.name}**`,
+                      footer: {
+                        text: `Duration : ${videoList[0].timestamp} | Age : ${videoList[0].ago} | Views : ${videoList[0].views}`,
+                      },
+                      image: { url: `${videoList[0].image}` },
+                    };
                   else if (
                     collected.first().emoji.name == musicData.reaction.two
                   )
-                    song = { title: videoList[1].title, url: videoList[1].url };
+                    song = {
+                      title: videoList[1].title,
+                      url: videoList[1].url,
+                      description: `By **${videoList[1].author.name}**`,
+                      footer: {
+                        text: `Duration : ${videoList[1].timestamp} | Age : ${videoList[1].ago} | Views : ${videoList[1].views}`,
+                      },
+                      image: { url: `${videoList[1].image}` },
+                    };
                   else if (
                     collected.first().emoji.name == musicData.reaction.three
                   )
-                    song = { title: videoList[2].title, url: videoList[2].url };
+                    song = {
+                      title: videoList[2].title,
+                      url: videoList[2].url,
+                      description: `By **${videoList[2].author.name}**`,
+                      footer: {
+                        text: `Duration : ${videoList[2].timestamp} | Age : ${videoList[2].ago} | Views : ${videoList[2].views}`,
+                      },
+                      image: { url: `${videoList[2].image}` },
+                    };
                   else if (
                     collected.first().emoji.name == musicData.reaction.four
                   )
-                    song = { title: videoList[3].title, url: videoList[3].url };
+                    song = {
+                      title: videoList[3].title,
+                      url: videoList[3].url,
+                      description: `By **${videoList[3].author.name}**`,
+                      footer: {
+                        text: `Duration : ${videoList[3].timestamp} | Age : ${videoList[3].ago} | Views : ${videoList[3].views}`,
+                      },
+                      image: { url: `${videoList[3].image}` },
+                    };
                   else if (
                     collected.first().emoji.name == musicData.reaction.five
                   )
-                    song = { title: videoList[4].title, url: videoList[4].url };
+                    song = {
+                      title: videoList[4].title,
+                      url: videoList[4].url,
+                      description: `By **${videoList[4].author.name}**`,
+                      footer: {
+                        text: `Duration : ${videoList[4].timestamp} | Age : ${videoList[4].ago} | Views : ${videoList[4].views}`,
+                      },
+                      image: { url: `${videoList[4].image}` },
+                    };
                   if (song)
                     preparePlay(
                       song,
