@@ -140,12 +140,15 @@ const play = (guild, song, mongodb) => {
     .collection(process.env.DB_MUSIC_QUEUE)
     .findOne({ guild_id: guild.id })
     .then((serverQueue) => {
-      if (!song && !serverQueue.serverQueue.songs && !serverQueue.serverQueue.autoPlay) {
-        console.log(serverQueue.serverQueue)
+      if (
+        !song &&
+        !serverQueue.serverQueue.songs &&
+        !serverQueue.serverQueue.autoPlay
+      ) {
         mongodb
           .db(process.env.MONGODB_DB)
           .collection(process.env.DB_MUSIC_QUEUE)
-          .deleteMany({ guild_id: guild.id })
+          .deleteMany({ guild_id: guild.id });
       } else if (!song) {
         mongodb
           .db(process.env.MONGODB_DB)
