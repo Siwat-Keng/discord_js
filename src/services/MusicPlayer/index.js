@@ -13,7 +13,7 @@ const MusicPlayer = (input, message, voiceChannel, mongodb) => {
       else {
         hasAutoPlayList(message.guild, mongodb).then((hasAutoPlay) => {
           if (hasAutoPlay) AutoPlay(message, voiceChannel, mongodb);
-          else message.reply(musicData.message.musicHelp);
+          else message.reply({ embed: musicData.embed.musicHelp });
         });
       }
     else if (command == "skip") commands.Skip(message.guild, mongodb);
@@ -22,8 +22,8 @@ const MusicPlayer = (input, message, voiceChannel, mongodb) => {
       commands.Sound(args[0], message.guild, mongodb);
     else if (command == "resume") commands.Resume(voiceChannel, mongodb);
     else if (command == "pause") commands.Pause(message.guild, mongodb);
-    else message.reply(musicData.message.musicHelp);
-  } else message.reply(musicData.message.musicHelp);
+    else message.reply({ embed: musicData.embed.musicHelp });
+  } else message.reply({ embed: musicData.embed.musicHelp });
 };
 
 export default MusicPlayer;

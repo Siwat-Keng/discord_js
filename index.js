@@ -14,13 +14,13 @@ const main = async () => {
     Handler.GuildHandler(guild, mongodb);
   });
 
-  client.on("guildMemberAdd", (member) => {
-    console.log(member);
-  });
+  // client.on("guildMemberAdd", (member) => {
+  //   console.log(member);
+  // });
 
-  client.on("guildMemberRemove", (member) => {
-    console.log(member);
-  });
+  // client.on("guildMemberRemove", (member) => {
+  //   console.log(member);
+  // });
 
   client.on("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -38,5 +38,4 @@ const main = async () => {
 
 main().catch((err) => {
   console.log(err.message);
-  setTimeout(main, 10000);
 });
