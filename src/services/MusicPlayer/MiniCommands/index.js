@@ -43,7 +43,7 @@ const Sound = (volume, guild, mongodb) => {
   let soundVolume = Number(volume);
   if (volume > 100) soundVolume = 100;
   else if (volume < 0) soundVolume = 0;
-  if (guild.me.voice.connection !== null) {
+  if (guild.me.voice.connection && guild.me.voice.connection.dispatcher) {
     guild.me.voice.connection.dispatcher.setVolumeLogarithmic(soundVolume / 50);
     mongodb
       .db(process.env.MONGODB_DB)

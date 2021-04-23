@@ -56,7 +56,7 @@ const removeAutoPlay = (music, guildID, mongodb) => {
 };
 
 const playing = (serverQueue, guild, mongodb) => {
-  if (!serverQueue.playing || serverQueue.songs[0]) return;
+  if (!serverQueue.playing || !serverQueue.songs) return;
   const dispatcher = guild.me.voice.connection
     .play(ytdl(serverQueue.songs[0].url))
     .on("finish", () => {
@@ -140,12 +140,12 @@ const play = (guild, song, mongodb) => {
     .collection(process.env.DB_MUSIC_QUEUE)
     .findOne({ guild_id: guild.id })
     .then((serverQueue) => {
-      if (!song && !serverQueue.serverQueue.autoPlay) {
+      if (!song && !serverQueue.serverQueue.songs && !serverQueue.serverQueue.autoPlay) {
+        console.log(serverQueue.serverQueue)
         mongodb
           .db(process.env.MONGODB_DB)
           .collection(process.env.DB_MUSIC_QUEUE)
-          .deleteMany({ guild_id: guild.id });
-        return;
+          .deleteMany({ guild_id: guild.id })
       } else if (!song) {
         mongodb
           .db(process.env.MONGODB_DB)
