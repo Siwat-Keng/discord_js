@@ -1,5 +1,5 @@
 import ytdl from "ytdl-core";
-import yts from "yt-search";
+import { getVideoDetail } from "../API";
 
 import musicData from "../../../locales/musicData.json";
 
@@ -256,16 +256,15 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
           preparePlay(song, serverQueue, textChannel, voiceChannel, mongodb);
         });
       } else {
-        yts(searchString).then((res) => {
+        getVideoDetail(searchString).then((videoList) => {
           let selectEmbed = {
             title: "Please select a track with reaction 1-5",
             description: "",
           };
-          const videoList = res.videos.slice(0, 5);
           videoList.map((item, idx) => {
-            selectEmbed.description += `**${idx + 1}. ${item.title}**\nFrom ${
-              item.author.name
-            } ( ${item.timestamp} )\n\n`;
+            selectEmbed.description += `**${idx + 1}. ${
+              item.title
+            }**\nChannel ${item.channel} ( ${item.duration} )\n\n`;
           });
           textChannel.send({ embed: selectEmbed }).then((msg) => {
             msg
@@ -286,11 +285,11 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
                     song = {
                       title: videoList[0].title,
                       url: videoList[0].url,
-                      description: `By **${videoList[0].author.name}**`,
+                      description: `Channel **${videoList[0].channel}**`,
                       footer: {
-                        text: `Duration : ${videoList[0].timestamp} | Age : ${videoList[0].ago} | Views : ${videoList[0].views}`,
+                        text: `Duration : ${videoList[0].duration} | Age : ${videoList[0].publish_time} | Views : ${videoList[0].views}`,
                       },
-                      image: { url: `${videoList[0].image}` },
+                      image: { url: `${videoList[0].thumbnails}` },
                     };
                   else if (
                     collected.first().emoji.name == musicData.reaction.two
@@ -298,11 +297,11 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
                     song = {
                       title: videoList[1].title,
                       url: videoList[1].url,
-                      description: `By **${videoList[1].author.name}**`,
+                      description: `Channel **${videoList[1].channel}**`,
                       footer: {
-                        text: `Duration : ${videoList[1].timestamp} | Age : ${videoList[1].ago} | Views : ${videoList[1].views}`,
+                        text: `Duration : ${videoList[1].duration} | Age : ${videoList[1].publish_time} | Views : ${videoList[1].views}`,
                       },
-                      image: { url: `${videoList[1].image}` },
+                      image: { url: `${videoList[1].thumbnails}` },
                     };
                   else if (
                     collected.first().emoji.name == musicData.reaction.three
@@ -310,11 +309,11 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
                     song = {
                       title: videoList[2].title,
                       url: videoList[2].url,
-                      description: `By **${videoList[2].author.name}**`,
+                      description: `Channel **${videoList[2].channel}**`,
                       footer: {
-                        text: `Duration : ${videoList[2].timestamp} | Age : ${videoList[2].ago} | Views : ${videoList[2].views}`,
+                        text: `Duration : ${videoList[2].duration} | Age : ${videoList[2].publish_time} | Views : ${videoList[2].views}`,
                       },
-                      image: { url: `${videoList[2].image}` },
+                      image: { url: `${videoList[2].thumbnails}` },
                     };
                   else if (
                     collected.first().emoji.name == musicData.reaction.four
@@ -322,11 +321,11 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
                     song = {
                       title: videoList[3].title,
                       url: videoList[3].url,
-                      description: `By **${videoList[3].author.name}**`,
+                      description: `Channel **${videoList[3].channel}**`,
                       footer: {
-                        text: `Duration : ${videoList[3].timestamp} | Age : ${videoList[3].ago} | Views : ${videoList[3].views}`,
+                        text: `Duration : ${videoList[3].duration} | Age : ${videoList[3].publish_time} | Views : ${videoList[3].views}`,
                       },
-                      image: { url: `${videoList[3].image}` },
+                      image: { url: `${videoList[3].thumbnails}` },
                     };
                   else if (
                     collected.first().emoji.name == musicData.reaction.five
@@ -334,11 +333,11 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
                     song = {
                       title: videoList[4].title,
                       url: videoList[4].url,
-                      description: `By **${videoList[4].author.name}**`,
+                      description: `Channel **${videoList[4].channel}**`,
                       footer: {
-                        text: `Duration : ${videoList[4].timestamp} | Age : ${videoList[4].ago} | Views : ${videoList[4].views}`,
+                        text: `Duration : ${videoList[4].duration} | Age : ${videoList[4].publish_time} | Views : ${videoList[4].views}`,
                       },
-                      image: { url: `${videoList[4].image}` },
+                      image: { url: `${videoList[4].thumbnails}` },
                     };
                   if (song)
                     preparePlay(

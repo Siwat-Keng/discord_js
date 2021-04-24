@@ -24,7 +24,6 @@
     "luxon": "^1.26.0",
     "mongodb": "^3.6.6",
     "string-similarity": "^4.0.4",
-    "yt-search": "^2.8.0",
     "ytdl-core": "^4.5.0"
   },
   "devDependencies": {
