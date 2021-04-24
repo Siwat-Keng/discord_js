@@ -56,7 +56,7 @@ const removeAutoPlay = (music, guildID, mongodb) => {
 };
 
 const playing = (serverQueue, guild, mongodb) => {
-  if (!serverQueue.playing || !serverQueue.songs) return;
+  if (!serverQueue.playing || !serverQueue.songs.length) return;
   const dispatcher = guild.me.voice.connection
     .play(ytdl(serverQueue.songs[0].url))
     .on("finish", () => {
@@ -142,7 +142,7 @@ const play = (guild, song, mongodb) => {
     .then((serverQueue) => {
       if (
         !song &&
-        !serverQueue.serverQueue.songs &&
+        !serverQueue.serverQueue.songs.length &&
         !serverQueue.serverQueue.autoPlay
       ) {
         mongodb
