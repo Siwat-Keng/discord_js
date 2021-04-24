@@ -149,7 +149,7 @@ const play = (guild, song, mongodb) => {
           .db(process.env.MONGODB_DB)
           .collection(process.env.DB_MUSIC_QUEUE)
           .deleteMany({ guild_id: guild.id });
-      } else if (!song) {
+      } else if (!song && serverQueue.serverQueue.autoPlay) {
         mongodb
           .db(process.env.MONGODB_DB)
           .collection(process.env.DB_MUSIC_AUTOPLAY)

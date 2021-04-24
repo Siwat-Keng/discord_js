@@ -1,7 +1,7 @@
 import covidAPI from "./API";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import fs from "fs";
-import dateTime from "node-datetime";
+import { getTimeFromFormat, getDateTimeFromString } from "../Timer";
 import stringSimilarity from "string-similarity";
 
 import provinceList from "../../locales/province.json";
@@ -32,8 +32,7 @@ const getClosestMatch = (province) => {
 };
 
 const CovidData = async () => {
-  const dateObject = dateTime.create();
-  const formattedTime = dateObject.format("I:M:S p");
+  const formattedTime = getTimeFromFormat("hh:mm:ss a");
   const configuration = {
     type: "line",
     data: {
@@ -78,8 +77,11 @@ const CovidData = async () => {
     height: 600,
   });
   var todayData = await covidAPI.getDailyData();
-  const dataDate = dateTime.create(todayData[todayData.length - 1].date);
-  const formattedDataDate = dataDate.format("D f Y");
+  const formattedDataDate = getDateTimeFromString(
+    todayData[todayData.length - 1].date,
+    "yyyy-mm-dd",
+    "D f Y"
+  );
   const image = await canvasRenderService.renderToBuffer(configuration);
   fs.writeFileSync("./images/image.jpg", image);
   const embedObject = {
@@ -122,8 +124,8 @@ const CovidData = async () => {
 
 const CovidProvince = async (province) => {
   var provinceData;
-  const dateObject = dateTime.create();
-  const formattedTime = dateObject.format("I:M:S p");
+
+  const formattedTime = getTimeFromFormat("hh:mm:ss a");
   let targetProvince = getClosestMatch(province);
   if (targetProvince[1] == "th")
     provinceData = (await covidAPI.getAccumulateData()).filter(

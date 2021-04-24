@@ -1,29 +1,27 @@
 import axios from "axios";
+import { getTimeStamp } from "../../Timer";
 
 const BASE_URL = "https://s.isanook.com/an/0/covid-19/static/data/";
 
 const getDailyURL = () => {
-  const timestamp = new Date().getTime() + Number(process.env.TIME_DIFF);
   return axios
-    .get(`${BASE_URL}thailand/daily/latest.json?${timestamp}`)
+    .get(`${BASE_URL}thailand/daily/latest.json?${getTimeStamp()}`)
     .then((res) => {
       return res.data.url;
     });
 };
 
 const getGlobalURL = () => {
-  const timestamp = new Date().getTime() + Number(process.env.TIME_DIFF);
   return axios
-    .get(`${BASE_URL}global/confirmed/latest.json?${timestamp}`)
+    .get(`${BASE_URL}global/confirmed/latest.json?${getTimeStamp()}`)
     .then((res) => {
       return res.data.url;
     });
 };
 
 const getAccumulateURL = () => {
-  const timestamp = new Date().getTime() + Number(process.env.TIME_DIFF);
   return axios
-    .get(`${BASE_URL}thailand/accumulate/latest.json?${timestamp}`)
+    .get(`${BASE_URL}thailand/accumulate/latest.json?${getTimeStamp()}`)
     .then((res) => {
       return res.data.url;
     });
