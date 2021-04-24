@@ -12,10 +12,11 @@ const getTimeFromFormat = (format) => {
   return getCurrentDateTime().toFormat(format);
 };
 
-const getDateTimeFromString = (string, format) => {
-  return DateTime.fromFormat(string, format, {
+const getDateTimeFromString = (string, oldFormat, newFormat) => {
+  return DateTime.fromFormat(string, oldFormat, {
     zone: process.env.TIMEZONE,
-  });
+  }).toFormat(newFormat);
 };
+
 
 module.exports = { getCurrentDateTime, getTimeFromFormat, getTimeStamp, getDateTimeFromString };

@@ -79,8 +79,8 @@ const CovidData = async () => {
   var todayData = await covidAPI.getDailyData();
   const formattedDataDate = getDateTimeFromString(
     todayData[todayData.length - 1].date,
-    "yyyy-mm-dd",
-    "D f Y"
+    "yyyy-LL-dd",
+    "DDD"
   );
   const image = await canvasRenderService.renderToBuffer(configuration);
   fs.writeFileSync("./images/image.jpg", image);
