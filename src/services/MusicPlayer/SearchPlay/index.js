@@ -3,6 +3,8 @@ import { getVideoDetail } from "../API";
 
 import musicData from "../../../locales/musicData.json";
 
+const timerQueue = {};
+
 const saveAutoPlay = (music, guildID, mongodb) => {
   mongodb
     .db(process.env.MONGODB_DB)
@@ -58,8 +60,18 @@ const removeAutoPlay = (music, guildID, mongodb) => {
 const playing = (serverQueue, guild, mongodb) => {
   if (!serverQueue.playing || !serverQueue.songs.length) return;
   const dispatcher = guild.me.voice.connection
-    .play(ytdl(serverQueue.songs[0].url))
+    .play(
+      ytdl(serverQueue.songs[0].url, {
+        filter: "audioonly",
+        quality: "highestaudio",
+        dlChunkSize: 0,
+        highWaterMark: 1 << 25,
+      })
+    )
     .on("finish", () => {
+      timerQueue[guild.id] = setTimeout(function () {
+        guild.me.voice.connection.disconnect();
+      }, 30000);
       mongodb
         .db(process.env.MONGODB_DB)
         .collection(process.env.DB_MUSIC_QUEUE)
@@ -244,6 +256,7 @@ const preparePlay = (song, textChannel, voiceChannel, mongodb) => {
 };
 
 const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
+  clearTimeout(timerQueue[textChannel.guild.id]);
   var song;
   if (ytdl.validateURL(searchString)) {
     ytdl.getInfo(searchString).then((res) => {
