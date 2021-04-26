@@ -1,17 +1,17 @@
-import Discord from "discord.js";
-import MongoClient from "mongodb";
+import { Client } from "discord.js";
+import mongoClient from "mongodb";
 import "dotenv/config";
-import Handler from "./src/app";
+import handler from "./src/app";
 
 const main = async () => {
-  const client = new Discord.Client();
+  const client = new Client();
 
-  const mongodb = await MongoClient(process.env.MONGODB_URI, {
+  const mongodb = await mongoClient(process.env.MONGODB_URI, {
     useUnifiedTopology: true,
   });
 
   client.on("guildCreate", (guild) => {
-    Handler.GuildHandler(guild, mongodb);
+    handler.guildHandler(guild, mongodb);
   });
 
   // client.on("guildMemberAdd", (member) => {
@@ -24,11 +24,11 @@ const main = async () => {
 
   client.on("ready", async () => {
     console.log(`Logged in as ${client.user.tag}!`);
-    Handler.ReadyHandler(client, mongodb);
+    handler.readyHandler(client, mongodb);
   });
 
   client.on("message", (msg) => {
-    Handler.MessageHandler(msg, mongodb);
+    handler.messageHandler(msg, mongodb);
   });
 
   await mongodb.connect();

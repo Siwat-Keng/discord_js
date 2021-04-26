@@ -1,5 +1,5 @@
-import GuildHandler from "./GuildHandler";
-import MessageHandler from "./MessageHandler";
-import { ReadyHandler } from "./ReadyHandler";
+import guildHandler from "./guildHandler";
+import messageHandler from "./messageHandler";
+import { readyHandler } from "./readyHandler";
 
-module.exports = { GuildHandler, MessageHandler, ReadyHandler };
+module.exports = { guildHandler, messageHandler, readyHandler };

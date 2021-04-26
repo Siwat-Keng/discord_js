@@ -1,4 +1,4 @@
-import { play } from "../SearchPlay";
+import { play } from "../searchPlay";
 
 const hasAutoPlayList = (guild, mongodb) => {
   return mongodb
@@ -11,7 +11,7 @@ const hasAutoPlayList = (guild, mongodb) => {
     });
 };
 
-const AutoPlay = (message, voiceChannel, mongodb) => {
+const autoPlay = (message, voiceChannel, mongodb) => {
   Promise.all([
     mongodb
       .db(process.env.MONGODB_DB)
@@ -63,4 +63,4 @@ const AutoPlay = (message, voiceChannel, mongodb) => {
   });
 };
 
-module.exports = { hasAutoPlayList, AutoPlay };
+module.exports = { hasAutoPlayList, autoPlay };

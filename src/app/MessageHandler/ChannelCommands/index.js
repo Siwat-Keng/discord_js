@@ -1,14 +1,17 @@
-import { ClearChannel } from "../../ReadyHandler";
+import { clearChannel } from "../../readyHandler";
 import noPermissionMessage from "../../../locales/noPermission.json";
 
-const ChannelCommandHandler = (input, msg, mongodb) => {
+const channelCommandHandler = (input, msg, mongodb) => {
   try {
     if (!msg.guild.me.hasPermission("MANAGE_CHANNELS")) {
-      msg.reply(noPermissionMessage.noManageChannelPermission);
-      return false;
+      return msg
+        .reply(noPermissionMessage.noManageChannelPermission)
+        .then(() => {
+          return false;
+        });
     }
     let channelName = input[0];
-    msg.guild.channels
+    return msg.guild.channels
       .create(channelName, { type: "voice" })
       .then((channel) => {
         mongodb
@@ -29,7 +32,7 @@ const ChannelCommandHandler = (input, msg, mongodb) => {
                 { upsert: true }
               );
           });
-        setTimeout(ClearChannel, 30000, channel, mongodb);
+        setTimeout(clearChannel, 30000, channel, mongodb);
         return true;
       });
   } catch {
@@ -37,4 +40,4 @@ const ChannelCommandHandler = (input, msg, mongodb) => {
   }
 };
 
-export default ChannelCommandHandler;
+export default channelCommandHandler;

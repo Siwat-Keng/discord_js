@@ -1,9 +1,9 @@
-import { play } from "../../services/MusicPlayer/SearchPlay";
-import { getLastUpdate } from "../../services/CovidData/API";
-import { CovidData } from "../../services/CovidData";
+import { play } from "../../services/MusicPlayer/searchPlay";
+import { getLastUpdate } from "../../services/covidData/API";
+import { covidData } from "../../services/covidData";
 
-const ClearChannel = (channel, mongodb) => {
-  if (channel.members.size) setTimeout(ClearChannel, 30000, channel);
+const clearChannel = (channel, mongodb) => {
+  if (channel.members.size) setTimeout(clearChannel, 30000, channel);
   channel.delete();
   mongodb
     .db(process.env.MONGODB_DB)
@@ -48,7 +48,7 @@ const triggerMessage = (guild, mongodb) => {
             );
           Promise.all([
             guild.client.channels.fetch(data.covid_channel),
-            CovidData(),
+            covidData(),
           ]).then(([channel, embedObject]) => {
             channel.send({ embed: embedObject });
           });
@@ -57,7 +57,7 @@ const triggerMessage = (guild, mongodb) => {
   });
 };
 
-const ReadyHandler = (client, mongodb) => {
+const readyHandler = (client, mongodb) => {
   mongodb
     .db(process.env.MONGODB_DB)
     .collection(process.env.DB_GUILD_DATA)
@@ -67,7 +67,7 @@ const ReadyHandler = (client, mongodb) => {
       if (res.temp_channel)
         res.temp_channel.map((item) => {
           client.channels.fetch(item).then((channel) => {
-            setTimeout(ClearChannel, 30000, channel, mongodb);
+            setTimeout(clearChannel, 30000, channel, mongodb);
           });
         });
     });
@@ -94,4 +94,4 @@ const ReadyHandler = (client, mongodb) => {
   });
 };
 
-module.exports = { ReadyHandler, ClearChannel };
+module.exports = { readyHandler, clearChannel };

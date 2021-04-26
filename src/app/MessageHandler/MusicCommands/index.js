@@ -1,7 +1,7 @@
-import { MusicPlayer } from "../../../services";
+import { musicPlayer } from "../../../services";
 import errorMessage from "../../../locales/noPermission.json";
 
-const MusicCommandHandler = (input, msg, mongodb) => {
+const musicCommandHandler = (input, msg, mongodb) => {
   try {
     if (msg.member.voice.channelID == null) {
       msg.reply(errorMessage.noVoiceChannel);
@@ -16,7 +16,7 @@ const MusicCommandHandler = (input, msg, mongodb) => {
           botPermissions.has("CONNECT") &&
           botPermissions.has("SPEAK")
         ) {
-          await MusicPlayer(input, msg, voiceChannel, mongodb);
+          await musicPlayer(input, msg, voiceChannel, mongodb);
           return true;
         } else {
           return msg.reply(errorMessage.noVoiceChannelPermission).then(() => {
@@ -29,4 +29,4 @@ const MusicCommandHandler = (input, msg, mongodb) => {
   }
 };
 
-export default MusicCommandHandler;
+export default musicCommandHandler;

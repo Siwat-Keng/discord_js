@@ -1,6 +1,6 @@
 import helpEmbedObject from "../../../locales/help.json";
 
-const HelpCommandsHandler = async (author) => {
+const helpCommandsHandler = async (author) => {
   try {
     author.send({ embed: helpEmbedObject });
     return true;
@@ -9,4 +9,4 @@ const HelpCommandsHandler = async (author) => {
   }
 };
 
-export default HelpCommandsHandler;
+export default helpCommandsHandler;

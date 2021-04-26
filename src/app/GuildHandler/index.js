@@ -1,4 +1,4 @@
-const GuildHandler = (guild, mongodb) => {
+const guildHandler = (guild, mongodb) => {
   mongodb
     .db(process.env.MONGODB_DB)
     .collection(process.env.DB_GUILD_DATA)
@@ -16,4 +16,4 @@ const GuildHandler = (guild, mongodb) => {
     });
 };
 
-export default GuildHandler;
+export default guildHandler;

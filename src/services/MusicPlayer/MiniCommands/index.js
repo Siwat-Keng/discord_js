@@ -1,6 +1,6 @@
 import { play } from "../SearchPlay";
 
-const Skip = (guild, mongodb) => {
+const skip = (guild, mongodb) => {
   if (
     guild.me.voice.connection &&
     guild.me.voice.connection.dispatcher &&
@@ -31,7 +31,7 @@ const Skip = (guild, mongodb) => {
     });
 };
 
-const Stop = (guild, mongodb) => {
+const stop = (guild, mongodb) => {
   if (guild.me.voice.connection) guild.me.voice.connection.disconnect();
   mongodb
     .db(process.env.MONGODB_DB)
@@ -39,7 +39,7 @@ const Stop = (guild, mongodb) => {
     .deleteMany({ guild_id: guild.id });
 };
 
-const Sound = (volume, guild, mongodb) => {
+const sound = (volume, guild, mongodb) => {
   let soundVolume = Number(volume);
   if (volume > 100) soundVolume = 100;
   else if (volume < 0) soundVolume = 0;
@@ -52,7 +52,7 @@ const Sound = (volume, guild, mongodb) => {
   }
 };
 
-const Pause = (guild, mongodb) => {
+const pause = (guild, mongodb) => {
   if (guild.me.voice.connection.dispatcher)
     guild.me.voice.connection.dispatcher.pause();
   mongodb
@@ -77,7 +77,7 @@ const Pause = (guild, mongodb) => {
     });
 };
 
-const Resume = (voiceChannel, mongodb) => {
+const resume = (voiceChannel, mongodb) => {
   mongodb
     .db(process.env.MONGODB_DB)
     .collection(process.env.DB_MUSIC_QUEUE)
@@ -114,4 +114,4 @@ const Resume = (voiceChannel, mongodb) => {
     });
 };
 
-module.exports = { Skip, Stop, Sound, Pause, Resume };
+module.exports = { skip, stop, sound, pause, resume };

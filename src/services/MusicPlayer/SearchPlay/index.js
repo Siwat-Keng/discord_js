@@ -256,7 +256,7 @@ const preparePlay = (song, textChannel, voiceChannel, mongodb) => {
     });
 };
 
-const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
+const searchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
   var song;
   if (ytdl.validateURL(searchString)) {
     ytdl.getInfo(searchString).then((res) => {
@@ -363,4 +363,4 @@ const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
   }
 };
 
-module.exports = { SearchPlay, play };
+module.exports = { searchPlay, play };

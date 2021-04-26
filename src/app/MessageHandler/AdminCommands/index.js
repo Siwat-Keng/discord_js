@@ -1,4 +1,4 @@
-const AdminCommandsHandler = (channel, input, guild, mongodb) => {
+const adminCommandsHandler = (channel, input, guild, mongodb) => {
   try {
     let command = input[0];
     if (command == "setprefix") {
@@ -27,4 +27,4 @@ const AdminCommandsHandler = (channel, input, guild, mongodb) => {
   }
 };
 
-export default AdminCommandsHandler;
+export default adminCommandsHandler;

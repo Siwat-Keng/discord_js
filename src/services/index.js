@@ -1,5 +1,5 @@
-import IntroduceChecker from "./IntroduceChecker";
-import CovidData from "./CovidData";
-import MusicPlayer from "./MusicPlayer";
+import introduceChecker from "./introduceChecker";
+import covidData from "./covidData";
+import musicPlayer from "./musicPlayer";
 
-module.exports = { IntroduceChecker, CovidData, MusicPlayer };
+module.exports = { introduceChecker, covidData, musicPlayer };

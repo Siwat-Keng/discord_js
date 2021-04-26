@@ -1,15 +1,22 @@
-import covidService from "../../../services/CovidData";
+import covidService from "../../../services/covidData";
 
-const CovidCommandHandler = async (input, channel) => {
+const covidCommandHandler = (input, channel) => {
   try {
-    if (input.length)
-      var embedObject = await covidService.CovidProvince(input.join(" "));
-    else var embedObject = await covidService.CovidData();
-    await channel.send({ embed: embedObject });
-    return true;
+    if (input.length) {
+      return covidService.covidProvince(input.join(" ")).then((embedObject) => {
+        return channel.send({ embed: embedObject }).then(() => {
+          return true;
+        });
+      });
+    } else
+      return covidService.covidData().then((embedObject) => {
+        return channel.send({ embed: embedObject }).then(() => {
+          return true;
+        });
+      });
   } catch {
     return false;
   }
 };
 
-export default CovidCommandHandler;
+export default covidCommandHandler;

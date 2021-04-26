@@ -17,7 +17,7 @@ const introduceSplitter = (string) => {
   return result;
 };
 
-const IntroduceChecker = async (msg, mongodb) => {
+const introduceChecker = async (msg, mongodb) => {
   try {
     const userIntro = introduceSplitter(msg.content);
     if (
@@ -31,4 +31,4 @@ const IntroduceChecker = async (msg, mongodb) => {
   }
 };
 
-export default IntroduceChecker;
+export default introduceChecker;
