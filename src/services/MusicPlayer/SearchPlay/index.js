@@ -97,7 +97,7 @@ const playing = (serverQueue, guild, mongodb) => {
 
   mongodb
     .db(process.env.MONGODB_DB)
-    .collection(process.env.DB_CONFIG)
+    .collection(process.env.DB_GUILD_DATA)
     .findOne({ guild_id: guild.id })
     .then((data) => {
       if (data.volume)
@@ -147,6 +147,7 @@ const playing = (serverQueue, guild, mongodb) => {
 };
 
 const play = (guild, song, mongodb) => {
+  clearTimeout(timerQueue[guild.id]);
   mongodb
     .db(process.env.MONGODB_DB)
     .collection(process.env.DB_MUSIC_QUEUE)
@@ -256,7 +257,6 @@ const preparePlay = (song, textChannel, voiceChannel, mongodb) => {
 };
 
 const SearchPlay = (searchString, textChannel, voiceChannel, mongodb) => {
-  clearTimeout(timerQueue[textChannel.guild.id]);
   var song;
   if (ytdl.validateURL(searchString)) {
     ytdl.getInfo(searchString).then((res) => {

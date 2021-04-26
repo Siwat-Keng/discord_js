@@ -11,6 +11,14 @@ const getDailyURL = () => {
     });
 };
 
+const getLastUpdate = () => {
+  return axios
+    .get(`${BASE_URL}thailand/daily/latest.json?${getTimeStamp()}`)
+    .then((res) => {
+      return res.data.lastUpdated;
+    });
+};
+
 const getGlobalURL = () => {
   return axios
     .get(`${BASE_URL}global/confirmed/latest.json?${getTimeStamp()}`)
@@ -51,4 +59,9 @@ const getAccumulateData = () => {
   });
 };
 
-module.exports = { getDailyData, getGlobalData, getAccumulateData };
+module.exports = {
+  getDailyData,
+  getGlobalData,
+  getAccumulateData,
+  getLastUpdate,
+};

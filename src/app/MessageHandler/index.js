@@ -12,14 +12,14 @@ const MessageHandler = async (msg, mongodb) => {
   }
   var prefix = await mongodb
     .db(process.env.MONGODB_DB)
-    .collection(process.env.DB_CONFIG)
+    .collection(process.env.DB_GUILD_DATA)
     .findOne({ guild_id: msg.guild.id });
   prefix = prefix.prefix;
   if (msg.content.startsWith(prefix)) {
     let input = msg.content.slice(prefix.length).trim().split(" ");
     let command = input.shift();
     if (command == "admin" && msg.author.id == msg.guild.ownerID) {
-      AdminCommandsHandler(input, msg, mongodb).then((res) => {
+      AdminCommandsHandler(msg.channel, input, msg.guild, mongodb).then((res) => {
         if (res) msg.react(responseReaction.success);
         else msg.react(responseReaction.fail);
       });

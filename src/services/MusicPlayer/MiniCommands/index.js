@@ -47,7 +47,7 @@ const Sound = (volume, guild, mongodb) => {
     guild.me.voice.connection.dispatcher.setVolumeLogarithmic(soundVolume / 50);
     mongodb
       .db(process.env.MONGODB_DB)
-      .collection(process.env.DB_CONFIG)
+      .collection(process.env.DB_GUILD_DATA)
       .updateOne({ guild_id: guild.id }, { $set: { volume: soundVolume } });
   }
 };
